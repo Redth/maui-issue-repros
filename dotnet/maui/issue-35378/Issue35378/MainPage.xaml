@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Issue35378.MainPage"
+             Title="CollectionView Top Inset Repro">
+    <!--
+        SafeAreaEdges="Container, None" = horizontal Container, vertical None.
+        Vertical None should let the CollectionView extend behind the nav bar
+        AND the bottom safe area. The expected behaviour is that iOS applies
+        a top contentInset == safeAreaInsets.Top so the FIRST item draws
+        BELOW the nav bar (and scrolls under it on user gesture).
+        Actual behaviour: first item draws at y=0 of the scroll view, partly
+        clipped under the translucent nav bar.
+    -->
+    <Grid SafeAreaEdges="Container, None">
+        <CollectionView ItemsSource="{Binding Items}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid HeightRequest="64"
+                          Padding="16,8"
+                          Margin="12,4"
+                          BackgroundColor="LightGray">
+                        <Label Text="{Binding .}"
+                               VerticalOptions="Center"
+                               TextColor="Black"
+                               FontSize="18" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
