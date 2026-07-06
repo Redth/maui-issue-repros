@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiDoneAccessoryRepro.MainPage"
+             Title="Done Accessory Repro">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Label
+                Text="Tap 'Field 1', then try to tap the Entry that sits just above the on-screen keyboard. It will NOT take focus. Entries higher up focus fine. The dead field is the one behind MAUI's transparent, full-width 'Done' keyboard accessory."
+                FontSize="14" />
+
+            <!-- Numeric keyboards have no Return key, which is why MAUI attaches
+                 its 'Done' accessory toolbar. -->
+            <Entry Placeholder="Field 1"  Keyboard="Numeric" />
+            <Entry Placeholder="Field 2"  Keyboard="Numeric" />
+            <Entry Placeholder="Field 3"  Keyboard="Numeric" />
+            <Entry Placeholder="Field 4"  Keyboard="Numeric" />
+            <Entry Placeholder="Field 5"  Keyboard="Numeric" />
+            <Entry Placeholder="Field 6"  Keyboard="Numeric" />
+            <Entry Placeholder="Field 7"  Keyboard="Numeric" />
+            <Entry Placeholder="Field 8"  Keyboard="Numeric" />
+            <Entry Placeholder="Field 9"  Keyboard="Numeric" />
+            <Entry Placeholder="Field 10" Keyboard="Numeric" />
+            <Entry Placeholder="Field 11" Keyboard="Numeric" />
+            <Entry Placeholder="Field 12" Keyboard="Numeric" />
+            <Entry Placeholder="Field 13" Keyboard="Numeric" />
+            <Entry Placeholder="Field 14" Keyboard="Numeric" />
+            <Entry Placeholder="Field 15" Keyboard="Numeric" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
