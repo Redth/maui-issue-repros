@@ -1,8 +1,8 @@
-# dotnet/macios — .NET MAUI on the iPhone Duo crashes on fold: lost managed peers (LayoutView type mismatch, PrimaryToolbarItem "Failed to marshal")
+# dotnet/macios#27374 — .NET MAUI on the iPhone Duo crashes on fold: lost managed peers (LayoutView type mismatch, PrimaryToolbarItem "Failed to marshal")
 
 - **Repo:** [dotnet/macios](https://github.com/dotnet/macios) (root cause); a companion [dotnet/maui](https://github.com/dotnet/maui) issue covers what MAUI does to make it worse
-- **Issue:** _to be filed_
-- **Runtime root cause, minimal repro (no MAUI):** [`../weak-reference-promotion`](../weak-reference-promotion)
+- **Issue:** [dotnet/macios#27374](https://github.com/dotnet/macios/issues/27374)
+- **Runtime root cause, minimal repro (no MAUI):** [`../WeakPeerTest`](../WeakPeerTest), described in [`../README.md`](../README.md)
 
 ## The bug
 
@@ -25,7 +25,7 @@ In both, a native object UIKit is still using no longer resolves to its own mana
 ## Root cause
 
 UIKit owns these objects through promoted weak references (`objc_loadWeakRetained`), which the runtime doesn't see,
-so their managed peers get finalized while still in use. See [`../weak-reference-promotion`](../weak-reference-promotion)
+so their managed peers get finalized while still in use. See [`../README.md`](../README.md)
 for the deterministic runtime repro and the code involved. With `REPRO_WEAKSPY=1` this app logs which UIKit code promotes
 weak references to MAUI's views and bar button items:
 - `_UIButtonBarButtonVisualProviderIOS` for bar button items;
@@ -43,18 +43,18 @@ Folding and unfolding never crashes.
 
 ## Actual
 
-Crashes, as above. Logs go to `MauiDuoPeerRepro/logs/run-N.log`.
+Crashes, as above. Logs go to `logs/run-N.log`.
 
 ## Repro project
 
-[`MauiDuoPeerRepro`](MauiDuoPeerRepro) is a small code-only MAUI app (MAUI 11.0.10 + Redth.Maui.VirtualListView 0.5.6).
-[`HomePage.cs`](MauiDuoPeerRepro/HomePage.cs) is a `TabbedPage` inside a `NavigationPage` with two tabs:
+This folder is a small code-only MAUI app (MAUI 11.0.10 + Redth.Maui.VirtualListView 0.5.6).
+[`HomePage.cs`](HomePage.cs) is a `TabbedPage` inside a `NavigationPage` with two tabs:
 - **Overview:** a `ScrollView` of `Border` cards.
 - **Timeline:** a `VirtualListView` whose rows **rebuild their child views on every bind**: `FlexLayout.Children.Clear()`,
   new `Grid`/`Border`/`Label` chips, and a new `ContentView.Content`.
 
 Two more pieces make up the trigger:
-- [`SideInsetProbe`](MauiDuoPeerRepro/Platforms/iOS/SideInsetProbe.cs) sets the list's flow-layout `SectionInset` from
+- [`SideInsetProbe`](Platforms/iOS/SideInsetProbe.cs) sets the list's flow-layout `SectionInset` from
   the side safe areas and invalidates the layout. Folding moves the safe areas, so the visible rows are re-bound.
 - When the window is wider than tall (unfolded), the tab controller's two children move into a
   `UIArrangementViewController` (iOS 27.1) side by side, and Timeline's `ToolbarItem` moves onto Overview. Folding moves
@@ -79,7 +79,7 @@ An earlier version of the sample used a plain `UIViewController` container (one 
 but they do stop the crashes: the stale duplicate is collected before a native address is reused.
 
 Switches are environment variables. Pass them as `SIMCTL_CHILD_<NAME>=1` in the environment of `stress.sh` or
-`xcrun simctl launch`. `REPRO_WEAKTEST=1` also runs the MAUI-free test from `../weak-reference-promotion` at launch.
+`xcrun simctl launch`. `REPRO_WEAKTEST=1` also runs the MAUI-free test from [`../WeakPeerTest`](../WeakPeerTest) at launch.
 
 ## Build & run
 
@@ -90,7 +90,6 @@ the `maui` workload, and the MAUI CLI for folding the simulator
 ```sh
 xcrun simctl create "Duo Repro" com.apple.CoreSimulator.SimDeviceType.iPhone-Duo com.apple.CoreSimulator.SimRuntime.iOS-27-2
 xcrun simctl boot <udid>
-cd MauiDuoPeerRepro
 dotnet build -c Debug -r iossimulator-arm64
 xcrun simctl install <udid> bin/Debug/net11.0-ios/iossimulator-arm64/MauiDuoPeerRepro.app
 ./stress.sh <udid> 15      # folds with `maui devflow device fold set folded|unfolded --experimental`

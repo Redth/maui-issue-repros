@@ -1,8 +1,8 @@
-# dotnet/macios — managed peer of an NSObject subclass is finalized while native code holds a promoted weak reference
+# dotnet/macios#27374 — managed peer of an NSObject subclass is finalized while native code holds a promoted weak reference
 
 - **Repo:** [dotnet/macios](https://github.com/dotnet/macios)
-- **Issue:** _to be filed_
-- **App-level crash this causes in .NET MAUI:** [`../maui-duo-fold-crash`](../maui-duo-fold-crash)
+- **Issue:** [#27374](https://github.com/dotnet/macios/issues/27374)
+- **App-level crash this causes in .NET MAUI:** [`MauiDuoPeerRepro`](MauiDuoPeerRepro) (iPhone Duo fold/unfold)
 
 ## The bug
 
@@ -57,12 +57,14 @@ After a lost peer, a second problem turns it into wrong-type dispatch:
    stale entry ("Already registered; don't touch the existing entry").
 3. Later lookups for the new object return B. In MAUI that crashes a UIKit layout pass with `Object type
    Microsoft.Maui.Platform.ContentView does not match target type Microsoft.Maui.Platform.LayoutView`. See
-   [`../maui-duo-fold-crash`](../maui-duo-fold-crash).
+   [`MauiDuoPeerRepro`](MauiDuoPeerRepro).
 
 (Code references are from tag `dotnet-11.0.1xx-xcode27.2.11039`. Related but different: dotnet/macios#15089 /
 dotnet/macios#26994, which only covers code that calls `GC.ReRegisterForFinalize` itself.)
 
-## Repro project
+## Repro projects
+
+- [`MauiDuoPeerRepro`](MauiDuoPeerRepro): the .NET MAUI app that crashes on iPhone Duo fold/unfold because of this; it has its own README.
 
 [`WeakPeerTest`](WeakPeerTest) is a plain `dotnet new ios` app (no MAUI) targeting `net11.0-ios` (CoreCLR) and
 `net10.0-ios` (Mono). The test is [`WeakRetainTest.cs`](WeakPeerTest/WeakRetainTest.cs), started from
