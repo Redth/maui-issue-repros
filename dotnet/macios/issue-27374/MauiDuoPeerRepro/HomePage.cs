@@ -325,6 +325,6 @@ sealed class TimelineRow : Microsoft.Maui.Controls.ContentView
 	{
 		ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Star) },
 		ColumnSpacing = 8,
-		Children = { new BoxView { WidthRequest = 2.5, Color = Colors.Gray }, new Label { Text = text }.Column(1) },
+		Children = { new Border { WidthRequest = 2.5, StrokeThickness = 0, BackgroundColor = Colors.Gray, StrokeShape = new RoundRectangle { CornerRadius = 1.25 } }, new Label { Text = text }.Column(1) },
 	};
 }
