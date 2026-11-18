@@ -2,6 +2,7 @@
 
 - **Repo:** [dotnet/macios](https://github.com/dotnet/macios)
 - **Issue:** [#27374](https://github.com/dotnet/macios/issues/27374)
+- **MAUI-side issue:** [dotnet/maui#40390](https://github.com/dotnet/maui/issues/40390)
 - **App-level crash this causes in .NET MAUI:** [`MauiDuoPeerRepro`](MauiDuoPeerRepro) (iPhone Duo fold/unfold)
 
 ## The bug

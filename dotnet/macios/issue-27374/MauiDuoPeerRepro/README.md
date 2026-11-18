@@ -1,7 +1,7 @@
 # dotnet/macios#27374 — .NET MAUI on the iPhone Duo crashes on fold: lost managed peers (LayoutView type mismatch, PrimaryToolbarItem "Failed to marshal")
 
 - **Repo:** [dotnet/macios](https://github.com/dotnet/macios) (root cause); a companion [dotnet/maui](https://github.com/dotnet/maui) issue covers what MAUI does to make it worse
-- **Issue:** [dotnet/macios#27374](https://github.com/dotnet/macios/issues/27374)
+- **Issues:** [dotnet/macios#27374](https://github.com/dotnet/macios/issues/27374) (root cause), [dotnet/maui#40390](https://github.com/dotnet/maui/issues/40390) (MAUI side)
 - **Runtime root cause, minimal repro (no MAUI):** [`../WeakPeerTest`](../WeakPeerTest), described in [`../README.md`](../README.md)
 
 ## The bug
